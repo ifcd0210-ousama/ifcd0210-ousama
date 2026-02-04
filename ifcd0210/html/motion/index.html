@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Portfolio | High Performance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030712;
+            --card: #111827;
+            --accent: #6366f1;
+            --text-main: #f9fafb;
+            --text-dim: #9ca3af;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.5rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -1px; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+        }
+
+        .hero h1 { font-size: clamp(3rem, 8vw, 6rem); line-height: 1; margin-bottom: 1.5rem; }
+        .hero p { color: var(--text-dim); font-size: 1.2rem; max-width: 600px; margin-bottom: 2rem; }
+        
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            width: fit-content;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+        .btn:hover { transform: translateY(-3px); }
+
+        /* --- PROJECTS GRID --- */
+        .section-padding { padding: 100px 10%; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: border 0.3s;
+        }
+        .card:hover { border-color: var(--accent); }
+        .card h3 { margin-bottom: 1rem; }
+        .card p { color: var(--text-dim); font-size: 0.95rem; }
+
+        /* --- ANIMATION CLASSES --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stagger Logic: JS will apply delay dynamically */
+        
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">DEV.PORTFOLIO</div>
+        <ul class="nav-links">
+            <li><a href="#work">Work</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h1 class="reveal">Architecting <br><span style="color: var(--accent)">Digital Motion.</span></h1>
+        <p class="reveal">A front-end engineer focused on interaction design and performance. I bridge the gap between aesthetics and code.</p>
+        <a href="#work" class="btn reveal">View Projects</a>
+    </section>
+
+    <section id="work" class="section-padding">
+        <h2 class="reveal">Selected Projects</h2>
+        <div class="grid">
+            <div class="card reveal" data-stagger="0">
+                <span class="tag">Next.js • Three.js</span>
+                <h3>Lumina Dashboard</h3>
+                <p>A high-performance data visualization tool with custom WebGL shaders and real-time streaming.</p>
+            </div>
+            <div class="card reveal" data-stagger="1">
+                <span class="tag">React • GSAP</span>
+                <h3>Aura E-Commerce</h3>
+                <p>Award-winning immersive shopping experience focused on micro-interactions and smooth transitions.</p>
+            </div>
+            <div class="card reveal" data-stagger="2">
+                <span class="tag">TypeScript • Node</span>
+                <h3>StreamSync Engine</h3>
+                <p>Backend architecture for low-latency video synchronization across global distributed systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="text-align: center;">
+        <h2 class="reveal">Got a project?</h2>
+        <p class="reveal">I'm currently available for freelance work and collaborations.</p>
+        <br>
+        <a href="mailto:hello@dev.com" class="reveal" style="font-size: 2rem; color: var(--accent); text-decoration: none; font-weight: 700;">Let's Talk →</a>
+    </section>
+
+    <script>
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px" // Triggers slightly before the element enters
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Check if it has a stagger attribute
+                    const delay = entry.target.getAttribute('data-stagger');
+                    if (delay) {
+                        entry.target.style.transitionDelay = `${delay * 0.15}s`;
+                    }
+                    
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>

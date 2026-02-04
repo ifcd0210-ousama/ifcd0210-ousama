@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP + Lenis Masterclass</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
+    
+    <style>
+        :root {
+            --dark: #0a0a0a;
+            --light: #f5f5f7;
+            --accent: #ff3e00;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* 1. Hero / Parallax Styles */
+        .hero { font-size: 5vw; text-transform: uppercase; text-align: center; }
+        .parallax-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 120%;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920');
+            background-size: cover;
+            z-index: -1;
+        }
+
+        /* 2. Horizontal Scroll Styles */
+        .horizontal-container {
+            width: 100%;
+            background: #111;
+        }
+        .horizontal-wrapper {
+            display: flex;
+            width: 300vw; /* 3 sections wide */
+            height: 100vh;
+        }
+        .horizontal-item {
+            width: 100vw;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10vw;
+            border-right: 1px solid #333;
+        }
+
+        /* 3. Reveal Section Styles */
+        .reveal-box {
+            width: 60%;
+            height: 60%;
+            position: relative;
+            background: #333;
+            overflow: hidden;
+        }
+        .reveal-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 4. Magnetic Button Styles */
+        .button-wrap { margin-top: 50px; }
+        .magnetic-btn {
+            padding: 20px 40px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .spacer { height: 50vh; }
+    </style>
+</head>
+<body>
+
+    <section class="hero-section">
+        <div class="parallax-bg"></div>
+        <h1 class="stagger-text">Experience<br>Smoothness</h1>
+    </section>
+
+    <section>
+        <div class="reveal-box">
+            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200" alt="Abstract">
+        </div>
+    </section>
+
+    <section class="horizontal-container">
+        <div class="horizontal-wrapper">
+            <div class="horizontal-item">CREATIVE</div>
+            <div class="horizontal-item">STRATEGY</div>
+            <div class="horizontal-item">DESIGN</div>
+        </div>
+    </section>
+
+    <section>
+        <div class="button-wrap">
+            <button class="magnetic-btn">HOVER ME</button>
+        </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+    <script>
+        // --- 1. LENIS INITIALIZATION ---
+        const lenis = new Lenis();
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+
+        // --- 2. GSAP SCROLLTRIGGER PLUGINS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // EXAMPLE 1: Hero Parallax & Text Stagger
+        gsap.to(".parallax-bg", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".hero-section",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        gsap.from(".stagger-text", {
+            y: 100,
+            opacity: 0,
+            duration: 1.5,
+            ease: "power4.out",
+            delay: 0.5
+        });
+
+        // EXAMPLE 2: Clip-Path Reveal
+        gsap.fromTo(".reveal-box", 
+            { clipPath: "inset(100% 0% 0% 0%)" },
+            { 
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 1.5,
+                ease: "power3.inOut",
+                scrollTrigger: {
+                    trigger: ".reveal-box",
+                    start: "top 80%",
+                    end: "top 20%",
+                    scrub: 1
+                }
+            }
+        );
+
+        // EXAMPLE 3: Horizontal Scroll
+        const horizontalWrapper = document.querySelector(".horizontal-wrapper");
+        gsap.to(horizontalWrapper, {
+            x: () => -(horizontalWrapper.scrollWidth - window.innerWidth),
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".horizontal-container",
+                pin: true,
+                scrub: 1,
+                invalidateOnRefresh: true,
+                end: () => "+=" + horizontalWrapper.scrollWidth
+            }
+        });
+
+        // EXAMPLE 4: Magnetic Button logic
+        const mBtn = document.querySelector(".magnetic-btn");
+        mBtn.addEventListener("mousemove", (e) => {
+            const rect = mBtn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            gsap.to(mBtn, {
+                x: x * 0.4,
+                y: y * 0.4,
+                duration: 0.6,
+                ease: "power2.out"
+            });
+        });
+
+        mBtn.addEventListener("mouseleave", () => {
+            gsap.to(mBtn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
+        });
+    </script>
+</body>
+</html>
